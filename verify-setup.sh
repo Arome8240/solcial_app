@@ -40,7 +40,7 @@ fi
 # Check apps
 echo ""
 echo "✓ Checking apps..."
-if [ -f "apps/mobile/package.json" ]; then
+if [ -f "apps/mobile/app.json" ]; then
     echo "  ✅ Mobile app found"
 else
     echo "  ❌ Mobile app not found"

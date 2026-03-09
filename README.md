@@ -1,5 +1,9 @@
 # Solcial - Social Media on Solana
 
+> ⚠️ **PROPRIETARY SOFTWARE** - This is source-available but NOT open source. 
+> You may view and contribute to the code, but you cannot use it for your own projects. 
+> See [LICENSE](LICENSE) for details.
+
 A decentralized social media platform built on Solana blockchain with React Native mobile app and NestJS backend.
 
 ## 🏗️ Monorepo Structure
@@ -80,8 +84,27 @@ pnpm start:dev
 
 ## 📝 License
 
-MIT
+**Proprietary License - Source Available**
+
+This software is proprietary and source-available under the Solcial Proprietary License. 
+
+### What You CAN Do:
+- ✅ View and study the source code for educational purposes
+- ✅ Fork the repository to submit contributions
+- ✅ Submit pull requests to improve the project
+
+### What You CANNOT Do:
+- ❌ Use the software for commercial purposes
+- ❌ Deploy or run the software in production
+- ❌ Create derivative works for distribution
+- ❌ Clone or fork for any purpose other than contributing
+
+For commercial licensing inquiries, please contact: team@solcial.app
+
+See the [LICENSE](LICENSE) file for full terms and conditions.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+We welcome contributions! By contributing, you agree to license your contributions 
+under the same terms as this project. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) 
+guide before submitting a pull request.

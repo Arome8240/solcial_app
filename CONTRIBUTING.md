@@ -143,7 +143,24 @@ pnpm add -D -w <package>
 
 ## 📄 License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the Solcial Proprietary License.
+
+### Contribution License Agreement
+
+When you submit a contribution, you:
+- Grant the project maintainers a perpetual, worldwide, non-exclusive, royalty-free license to use your contribution
+- Confirm that your contribution is your original work
+- Confirm that you have the right to grant these licenses
+- Agree that your contribution does not violate any third-party rights
+
+### Important Notes
+
+- This project is **not open source** - it uses a proprietary license
+- The source code is available for viewing and contributing only
+- You cannot use this code for your own projects or commercial purposes
+- Forks should only be created for the purpose of submitting contributions
+
+For commercial licensing inquiries, contact: team@solcial.app
 
 ## 🤝 Code of Conduct
 

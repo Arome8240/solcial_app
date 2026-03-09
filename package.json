@@ -2,7 +2,13 @@
   "name": "solcial-monorepo",
   "version": "1.0.0",
   "private": true,
+  "license": "UNLICENSED",
   "description": "Solcial - Social Media on Solana Monorepo",
+  "author": "Solcial Team <team@solcial.app>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/solcial/solcial.git"
+  },
   "scripts": {
     "mobile": "cd apps/mobile && pnpm start",
     "backend": "cd apps/backend && pnpm start:dev",

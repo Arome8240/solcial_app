@@ -1,0 +1,18 @@
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { MiniAppsController } from './mini-apps.controller';
+import { MiniAppsService } from './mini-apps.service';
+import { JupiterService } from './jupiter.service';
+import { User, UserSchema } from '../../schemas/user.schema';
+import { SolanaModule } from '../solana/solana.module';
+
+@Module({
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    SolanaModule,
+  ],
+  controllers: [MiniAppsController],
+  providers: [MiniAppsService, JupiterService],
+  exports: [MiniAppsService, JupiterService],
+})
+export class MiniAppsModule {}

@@ -7,7 +7,7 @@
   "author": "Solcial Team <team@solcial.app>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/solcial/solcial.git"
+    "url": "https://github.com/Arome8240/solcial_app.git"
   },
   "scripts": {
     "mobile": "cd apps/mobile && pnpm start",

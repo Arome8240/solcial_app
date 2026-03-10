@@ -27,7 +27,7 @@ export default function Logo({ size = 64, className = '' }: LogoProps) {
         className="relative"
       >
         {/* Outer circle with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-600 to-blue-600 rounded-full" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-600 to-blue-600 rounded-full shadow-2xl shadow-purple-500/30" />
         
         {/* Inner design */}
         <div className="absolute inset-2 bg-white rounded-full flex items-center justify-center">

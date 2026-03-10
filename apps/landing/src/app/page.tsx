@@ -105,29 +105,70 @@ export default function Home() {
     <main className="min-h-screen bg-gray-950 text-white overflow-x-hidden">
       {/* Animated Background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Animated glowy circles */}
         <motion.div
           animate={{
             scale: [1, 1.5, 1],
-            rotate: [0, 45, 0],
+            rotate: [0, 90, 180, 270, 360],
+            x: [0, 100, 0, -100, 0],
+            y: [0, 50, 100, 50, 0],
           }}
           transition={{
             duration: 30,
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-indigo-900/20 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[100px]"
         />
         <motion.div
           animate={{
-            scale: [1.5, 1, 1.5],
-            rotate: [45, 0, 45],
+            scale: [1, 1.3, 1],
+            rotate: [0, -45, 0],
+            x: [0, -150, 0],
+            y: [0, 100, 0],
           }}
           transition={{
-            duration: 30,
+            duration: 25,
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute -bottom-1/2 -right-1/2 w-[200%] h-[200%] bg-gradient-to-tl from-pink-900/20 via-purple-900/20 to-blue-900/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.4, 1],
+            rotate: [0, 60, 120, 180, 240, 300, 360],
+          }}
+          transition={{
+            duration: 40,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-pink-600/10 rounded-full blur-[140px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/3 right-1/3 w-[400px] h-[400px] bg-yellow-500/10 rounded-full blur-[80px]"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            rotate: [0, -120, -240, -360],
+          }}
+          transition={{
+            duration: 35,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute bottom-1/3 left-1/3 w-[450px] h-[450px] bg-cyan-500/10 rounded-full blur-[90px]"
         />
         {/* Grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_100%)]" />

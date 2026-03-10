@@ -6,7 +6,7 @@ import {
   Zap, Coins, Shield, MessageCircle, Wallet, Gift, 
   Gamepad2, UtensilsCrossed, TrendingUp, Users, 
   ArrowRight, Sparkles, Check, Cpu, Globe, Lock,
-  Zap as ZapIcon, Activity
+  Zap as ZapIcon, Activity, AlertCircle
 } from 'lucide-react'
 import WaitlistForm from '@/components/WaitlistForm'
 import Logo from '@/components/Logo'

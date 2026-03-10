@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, CheckCircle2, Mail, Sparkles } from 'lucide-react'
+import { Loader2, CheckCircle2, Mail, Sparkles, AlertCircle } from 'lucide-react'
 
 export default function WaitlistForm() {
   const [email, setEmail] = useState('')
@@ -105,7 +105,7 @@ export default function WaitlistForm() {
               exit={{ opacity: 0, y: -10 }}
               className="flex items-center justify-center gap-2 text-red-400 font-semibold"
             >
-              <span>⚠️</span>
+              <AlertCircle className="w-5 h-5" />
               <span>{error}</span>
             </motion.div>
           )}

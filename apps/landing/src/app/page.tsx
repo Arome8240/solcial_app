@@ -6,7 +6,9 @@ import {
   Zap, Coins, Shield, MessageCircle, Wallet, Gift, 
   Gamepad2, UtensilsCrossed, TrendingUp, Users, 
   ArrowRight, Sparkles, Check, Cpu, Globe, Lock,
-  Zap as ZapIcon, Activity, AlertCircle
+  Zap as ZapIcon, Activity, AlertCircle, CheckCircle2,
+  ArrowDownUp, Utensils, Dice1, Coins as CoinsIcon, 
+  RotateCcw, Package, BarChart3, MessageSquare
 } from 'lucide-react'
 import WaitlistForm from '@/components/WaitlistForm'
 import Logo from '@/components/Logo'
@@ -57,14 +59,14 @@ const features = [
 ]
 
 const miniApps = [
-  { icon: '💱', name: 'Token Swap', desc: 'Swap SOL for any token instantly with real-time rates from Jupiter Aggregator' },
-  { icon: '🍕', name: 'Food Delivery', desc: 'Order food from local restaurants and pay with SOL instantly' },
-  { icon: '🎲', name: 'Dice Game', desc: 'Roll the dice and win SOL rewards. 50% win rate with instant payouts' },
-  { icon: '🪙', name: 'Coin Flip', desc: 'Double your bet instantly. Heads or tails - the choice is yours' },
-  { icon: '🎰', name: 'Lucky Spin', desc: 'Spin the wheel for multipliers up to 5x. Win SOL rewards' },
-  { icon: '🎁', name: 'Daily Airdrop', desc: 'Claim free SOL every 24 hours. No strings attached' },
-  { icon: '📊', name: 'Portfolio Tracker', desc: 'Track your token holdings, earnings, and portfolio value in real-time' },
-  { icon: '💬', name: 'Crypto Chat', desc: 'End-to-end encrypted messaging with built-in crypto tipping' }
+  { icon: ArrowDownUp, name: 'Token Swap', desc: 'Swap SOL for any token instantly with real-time rates from Jupiter Aggregator' },
+  { icon: Utensils, name: 'Food Delivery', desc: 'Order food from local restaurants and pay with SOL instantly' },
+  { icon: Dice1, name: 'Dice Game', desc: 'Roll the dice and win SOL rewards. 50% win rate with instant payouts' },
+  { icon: CoinsIcon, name: 'Coin Flip', desc: 'Double your bet instantly. Heads or tails - the choice is yours' },
+  { icon: RotateCcw, name: 'Lucky Spin', desc: 'Spin the wheel for multipliers up to 5x. Win SOL rewards' },
+  { icon: Package, name: 'Daily Airdrop', desc: 'Claim free SOL every 24 hours. No strings attached' },
+  { icon: BarChart3, name: 'Portfolio Tracker', desc: 'Track your token holdings, earnings, and portfolio value in real-time' },
+  { icon: MessageSquare, name: 'Crypto Chat', desc: 'End-to-end encrypted messaging with built-in crypto tipping' }
 ]
 
 const stats = [
@@ -364,7 +366,9 @@ export default function Home() {
                 whileHover={{ scale: 1.05 }}
                 className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 transition-all cursor-pointer group"
               >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{app.icon}</div>
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <app.icon className="w-8 h-8 text-white" />
+                </div>
                 <h3 className="text-xl font-bold text-white mb-2">{app.name}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{app.desc}</p>
               </motion.div>

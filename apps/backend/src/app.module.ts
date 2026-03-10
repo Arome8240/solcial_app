@@ -20,6 +20,7 @@ import { PusherModule } from './modules/pusher/pusher.module';
 import { BlockchainMonitorModule } from './modules/blockchain-monitor/blockchain-monitor.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
 import { MiniAppsModule } from './modules/mini-apps/mini-apps.module';
+import { WaitlistModule } from './modules/waitlist/waitlist.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { MiniAppsModule } from './modules/mini-apps/mini-apps.module';
     KeepaliveModule,
     BlockchainMonitorModule,
     MiniAppsModule,
+    WaitlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,7 +6,7 @@ import {
   Zap, Coins, Shield, MessageCircle, Wallet, Gift, 
   Gamepad2, UtensilsCrossed, TrendingUp, Users, 
   ArrowRight, Sparkles, Check, Cpu, Globe, Lock,
-  BarChart3, Zap as ZapIcon, Activity, Terminal
+  Zap as ZapIcon, Activity
 } from 'lucide-react'
 import WaitlistForm from '@/components/WaitlistForm'
 import Logo from '@/components/Logo'
@@ -74,33 +74,6 @@ const stats = [
   { value: '24/7', label: 'Always Available', icon: Globe },
   { value: '100k+', label: 'TPS Capacity', icon: Cpu },
   { value: '0', label: 'Censorship Risk', icon: Shield }
-]
-
-const roadmap = [
-  {
-    phase: 'Phase 1',
-    title: 'Foundation',
-    date: 'Q1 2024',
-    items: ['Mobile app launch', 'Core social features', 'Wallet integration', 'Token swaps']
-  },
-  {
-    phase: 'Phase 2',
-    title: 'Expansion',
-    date: 'Q2 2024',
-    items: ['Mini-apps ecosystem', 'Creator tokens', 'Community features', 'Analytics dashboard']
-  },
-  {
-    phase: 'Phase 3',
-    title: 'Ecosystem',
-    date: 'Q3 2024',
-    items: ['DAO governance', 'Creator studio', 'Mobile app', 'Web3 social graph']
-  },
-  {
-    phase: 'Phase 4',
-    title: 'Mass Adoption',
-    date: 'Q4 2024',
-    items: ['Social payments', 'Merchant integration', 'Cross-chain support', 'Enterprise solutions']
-  }
 ]
 
 export default function Home() {
@@ -381,8 +354,8 @@ export default function Home() {
             <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-full" />
             
             {[
-              { step: '1', title: 'Create Content', desc: 'Post photos, videos, or thoughts just like any social platform. Your content is stored on-chain.', icon: Terminal },
-              { step: '2', title: 'Tokenize & Trade', desc: 'Your posts become tokens that followers can buy and trade. You earn as your content gains value.', icon: BarChart3 },
+              { step: '1', title: 'Create Content', desc: 'Post photos, videos, or thoughts just like any social platform. Your content is stored on-chain.', icon: Activity },
+              { step: '2', title: 'Tokenize & Trade', desc: 'Your posts become tokens that followers can buy and trade. You earn as your content gains value.', icon: TrendingUp },
               { step: '3', title: 'Earn SOL', desc: 'Get paid directly in SOL as your content gains traction. No platform takes a cut of your earnings.', icon: Wallet }
             ].map((item, index) => (
               <motion.div
@@ -403,59 +376,6 @@ export default function Home() {
                 <item.icon className="w-12 h-12 text-white mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
                 <p className="text-gray-400 leading-relaxed">{item.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Roadmap */}
-      <section className="relative py-32 px-4 bg-black/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">Roadmap</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Building the future of SocialFi, one milestone at a time.
-            </p>
-          </motion.div>
-
-          <div className="space-y-12">
-            {roadmap.map((phase, index) => (
-              <motion.div
-                key={phase.phase}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="relative"
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-0 md:left-1/2 top-0 md:-translate-x-1/2 w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-lg shadow-purple-500/50 z-10" />
-                
-                <div className={`flex flex-col md:flex-row gap-8 ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
-                  <div className="flex-1">
-                    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all">
-                      <span className="text-sm font-bold text-purple-400 mb-2 block">{phase.phase}</span>
-                      <h3 className="text-2xl font-bold text-white mb-4">{phase.title}</h3>
-                      <p className="text-gray-400 mb-6">{phase.date}</p>
-                      <ul className="space-y-3">
-                        {phase.items.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3 text-gray-300">
-                            <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                            <span>{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
               </motion.div>
             ))}
           </div>

@@ -10,9 +10,7 @@
     "url": "https://github.com/Arome8240/solcial_app.git"
   },
   "scripts": {
-    "mobile": "cd apps/mobile && pnpm start",
     "backend": "cd apps/backend && pnpm start:dev",
-    "mobile:install": "cd apps/mobile && pnpm install",
     "backend:install": "cd apps/backend && pnpm install",
     "install:all": "pnpm mobile:install && pnpm backend:install"
   },

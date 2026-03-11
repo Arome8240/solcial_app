@@ -1,132 +1,147 @@
-# Monorepo Migration Guide
+# Repository Structure Guide
 
-This document explains the migration from separate repositories to a monorepo structure.
+This document explains the current repository structure with separated mobile and backend/landing apps.
 
-## What Changed
+## Current Structure
 
-### Before (Separate Repos)
+### Monorepo (solcial_app)
 ```
-solcial/                    # Mobile app repo
-├── .git/
-├── app/
-├── components/
-└── ...
-
-solcial-backend/            # Backend repo
-├── .git/
-├── src/
-└── ...
-```
-
-### After (Monorepo)
-```
-solcial/                    # Single monorepo
-├── .git/                   # Single git repository
+solcial_app/                # Backend & Landing monorepo
+├── .git/                   # Git repository
 ├── apps/
-│   ├── mobile/            # Mobile app (formerly solcial/)
-│   └── backend/           # Backend API (formerly solcial-backend/)
+│   ├── backend/           # Backend API (NestJS)
+│   └── landing/           # Landing page (Next.js)
 ├── packages/              # Shared packages (future)
 ├── package.json           # Root package.json
 ├── pnpm-workspace.yaml    # Workspace configuration
 └── README.md
 ```
 
-## Migration Steps Completed
+### Mobile App (solcial)
+```
+solcial/                    # Mobile app (separate repo)
+├── .git/                   # Separate git repository
+├── app/                    # Expo Router app
+├── components/            # React Native components
+├── hooks/                 # Custom hooks
+├── lib/                   # Utilities & API
+├── store/                 # Zustand stores
+├── package.json           # Mobile app package.json
+└── README.md
+```
 
-1. ✅ Removed `.git` folders from both projects
-2. ✅ Created monorepo structure with `apps/` and `packages/` directories
-3. ✅ Moved mobile app to `apps/mobile/`
-4. ✅ Moved backend to `apps/backend/`
-5. ✅ Created root `package.json` with workspace configuration
-6. ✅ Created `pnpm-workspace.yaml` for pnpm workspaces
-7. ✅ Initialized new git repository with `main` as default branch
-8. ✅ Created initial commit
+## Why Separated?
 
-## Git Configuration
+1. **Different Release Cycles**: Mobile app updates independently from backend/landing
+2. **Different Tech Stacks**: React Native vs NestJS/Next.js
+3. **Separate Deployments**: Mobile via EAS, Backend via Render, Landing via Vercel
+4. **Team Autonomy**: Mobile team can work independently
+5. **Reduced Complexity**: Smaller, focused repositories
 
-- **Default Branch**: `main`
-- **Repository**: Single git repository at root level
-- **Commit**: Initial commit with all code
+## Working with Both Repos
 
-## Working with the Monorepo
-
-### Install Dependencies
+### Backend & Landing (solcial_app)
 
 ```bash
 # Install all dependencies
 pnpm install
 
-# Or install for specific app
-cd apps/mobile && pnpm install
-cd apps/backend && pnpm install
-```
+# Run backend
+pnpm backend
 
-### Run Applications
+# Run landing page
+pnpm landing
 
-```bash
-# From root
-pnpm mobile          # Start mobile app
-pnpm backend         # Start backend
-
-# Or from app directory
-cd apps/mobile && pnpm start
-cd apps/backend && pnpm start:dev
-```
-
-### Add Dependencies
-
-```bash
-# Add to mobile app
-pnpm --filter mobile add <package>
-
-# Add to backend
+# Add dependency to backend
 pnpm --filter backend add <package>
 
-# Add to root (dev dependencies)
-pnpm add -D -w <package>
+# Add dependency to landing
+pnpm --filter landing add <package>
 ```
 
-### Git Workflow
+### Mobile App (solcial)
 
 ```bash
-# Create feature branch
-git checkout -b feature/my-feature
+# Install dependencies
+pnpm install
 
-# Make changes
+# Run on Android
+pnpm android
+
+# Run on iOS
+pnpm ios
+
+# Run on web
+pnpm web
+
+# Add dependency
+pnpm add <package>
+```
+
+## Git Workflow
+
+### Backend & Landing
+```bash
+cd solcial_app
+git checkout -b feature/my-feature
 git add .
 git commit -m "feat: add new feature"
-
-# Push to remote
 git push origin feature/my-feature
 ```
 
-## Benefits of Monorepo
+### Mobile App
+```bash
+cd solcial
+git checkout -b feature/my-feature
+git add .
+git commit -m "feat: add new feature"
+git push origin feature/my-feature
+```
 
-1. **Single Source of Truth**: All code in one repository
-2. **Easier Code Sharing**: Share types, utilities between apps
-3. **Atomic Commits**: Changes across apps in single commit
-4. **Simplified CI/CD**: Single pipeline for all apps
-5. **Better Collaboration**: Easier to see full picture
-6. **Consistent Tooling**: Shared configs and dependencies
+## Deployment
+
+### Backend
+- Hosted on Render
+- Deploy from `solcial_app` repository
+- Environment: `apps/backend`
+
+### Landing Page
+- Hosted on Vercel
+- Deploy from `solcial_app` repository
+- Environment: `apps/landing`
+
+### Mobile App
+- Built with EAS
+- Deploy from `solcial` repository
+- Platforms: iOS (App Store), Android (Google Play)
+
+## API Communication
+
+Mobile app communicates with backend via REST API:
+- Backend URL: Set in `EXPO_PUBLIC_API_URL` environment variable
+- Default: `https://api.solcial.app` (production)
+
+## Shared Resources
+
+### Types & Interfaces
+- Backend types: `solcial_app/apps/backend/src/types/`
+- Mobile types: `solcial/types/`
+- Consider creating a shared types package in the future
+
+### Documentation
+- Backend API docs: `solcial_app/apps/backend/README.md`
+- Mobile setup: `solcial/README.md`
+- Landing page: `solcial_app/apps/landing/README.md`
 
 ## Next Steps
 
-1. Set up remote repository (GitHub/GitLab)
-2. Configure CI/CD pipelines
-3. Create shared packages in `packages/` directory
-4. Update deployment configurations
-5. Update team documentation
-
-## Old Directories
-
-The original `solcial-backend/` directory still exists outside the monorepo.
-You can safely delete it after verifying everything works:
-
-```bash
-# Verify monorepo works first, then:
-rm -rf ../solcial-backend
-```
+1. Set up CI/CD for both repositories
+2. Configure environment variables for each deployment
+3. Set up monitoring and error tracking
+4. Create shared types package (optional)
+5. Document API contracts between mobile and backend
 
 ## Questions?
 
-See `CONTRIBUTING.md` for development guidelines or reach out to the team.
+See respective `README.md` files or `CONTRIBUTING.md` for development guidelines.
+

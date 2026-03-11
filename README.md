@@ -6,28 +6,50 @@
 
 A decentralized social media platform built on Solana blockchain with React Native mobile app and NestJS backend.
 
-## 🏗️ Monorepo Structure
+## 🏗️ Repository Structure
 
+Solcial is organized into two separate repositories:
+
+### Backend & Landing (This Repository)
+```
+solcial_app/
+├── apps/
+│   ├── backend/         # NestJS backend API
+│   └── landing/         # Next.js landing page
+├── packages/            # Shared packages (future)
+└── README.md
+```
+
+### Mobile App (Separate Repository)
 ```
 solcial/
-├── apps/
-│   ├── mobile/          # React Native mobile app (Expo)
-│   └── backend/         # NestJS backend API
-├── packages/            # Shared packages (future)
+├── app/                 # Expo Router app
+├── components/          # React Native components
+├── hooks/              # Custom hooks
+├── lib/                # Utilities & API
+├── store/              # Zustand stores
 └── README.md
 ```
 
 ## 📱 Apps
 
-### Mobile App
+### Mobile App (solcial)
 - **Tech Stack**: React Native, Expo, TypeScript
 - **Features**: Social feed, wallet, mini apps, messaging
-- **Location**: `apps/mobile/`
+- **Repository**: [solcial](../solcial)
+- **Deployment**: EAS (iOS App Store, Google Play)
 
-### Backend API
+### Backend API (solcial_app/apps/backend)
 - **Tech Stack**: NestJS, MongoDB, Solana Web3.js
 - **Features**: User management, posts, wallet, mini apps
-- **Location**: `apps/backend/`
+- **Deployment**: Render
+- **API Docs**: See `apps/backend/README.md`
+
+### Landing Page (solcial_app/apps/landing)
+- **Tech Stack**: Next.js 14, TypeScript, Tailwind CSS
+- **Features**: Product showcase, waitlist signup
+- **Deployment**: Vercel
+- **URL**: https://solcial.app
 
 ## 🚀 Getting Started
 
@@ -37,28 +59,30 @@ solcial/
 - MongoDB
 - Solana CLI (for devnet)
 
-### Installation
+### Installation (Backend & Landing)
 
 ```bash
 # Install dependencies for all apps
 pnpm install
 
 # Or install individually
-cd apps/mobile && pnpm install
 cd apps/backend && pnpm install
+cd apps/landing && pnpm install
 ```
 
-### Development
+### Development (Backend & Landing)
 
 ```bash
-# Run mobile app
-cd apps/mobile
-pnpm start
-
 # Run backend
-cd apps/backend
-pnpm start:dev
+pnpm backend
+
+# Run landing page
+pnpm landing
 ```
+
+### Mobile App Setup
+
+See the [solcial](../solcial) repository for mobile app setup and development.
 
 ## 🎮 Features
 
@@ -76,11 +100,12 @@ pnpm start:dev
 
 ## 🔧 Tech Stack
 
-- **Frontend**: React Native, Expo, TypeScript, TailwindCSS (NativeWind)
+- **Mobile**: React Native, Expo, TypeScript, TailwindCSS (NativeWind)
 - **Backend**: NestJS, MongoDB, Mongoose
+- **Landing**: Next.js 14, TypeScript, Tailwind CSS, Framer Motion
 - **Blockchain**: Solana Web3.js, Jupiter Aggregator
 - **Push Notifications**: Firebase Cloud Messaging
-- **State Management**: React Query
+- **State Management**: React Query (mobile), TanStack Query (web)
 
 ## 📝 License
 
@@ -108,3 +133,11 @@ See the [LICENSE](LICENSE) file for full terms and conditions.
 We welcome contributions! By contributing, you agree to license your contributions 
 under the same terms as this project. Please read our [CONTRIBUTING.md](CONTRIBUTING.md) 
 guide before submitting a pull request.
+
+## 📚 Documentation
+
+- **Backend**: See `apps/backend/README.md`
+- **Landing**: See `apps/landing/README.md`
+- **Mobile**: See [solcial](../solcial) repository
+- **Repository Structure**: See [MIGRATION.md](MIGRATION.md)
+

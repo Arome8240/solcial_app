@@ -11,8 +11,10 @@
   },
   "scripts": {
     "backend": "cd apps/backend && pnpm start:dev",
+    "landing": "cd apps/landing && pnpm dev",
     "backend:install": "cd apps/backend && pnpm install",
-    "install:all": "pnpm mobile:install && pnpm backend:install"
+    "landing:install": "cd apps/landing && pnpm install",
+    "install:all": "pnpm backend:install && pnpm landing:install"
   },
   "workspaces": [
     "apps/*",

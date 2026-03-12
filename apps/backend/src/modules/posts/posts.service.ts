@@ -67,39 +67,37 @@ export class PostsService {
   }
 
   async getFeed(userId: string, page: number = 1, limit: number = 20) {
-      const skip = (page - 1) * limit;
+    const skip = (page - 1) * limit;
 
-      const posts = await this.postModel
-        .find()
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate('author', 'username name avatar')
-        .lean();
+    const posts = await this.postModel
+      .find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate('author', 'username name avatar')
+      .lean();
 
-      // Get all post IDs
-      const postIds = posts.map(post => post._id);
-
-      // Single query to get all likes for this user on these posts
-      const likedPostIds = await this.likeModel
-        .find({
+    const postsWithLikeStatus = await Promise.all(
+      posts.map(async (post: any) => {
+        const liked = await this.likeModel.exists({
           user: userId,
-          post: { $in: postIds },
-        })
-        .distinct('post');
+          post: post._id,
+        });
 
-      // Create a Set for O(1) lookup
-      const likedSet = new Set(likedPostIds.map(id => id.toString()));
+        return {
+          ...post,
+          id: post._id.toString(),
+          author: {
+            ...post.author,
+            id: (post.author as any)._id.toString(),
+          },
+          isLiked: !!liked,
+        };
+      }),
+    );
 
-      // Map posts with like status (no async needed)
-      const postsWithLikeStatus = posts.map(post => ({
-        ...post,
-        id: post._id.toString(),
-        isLiked: likedSet.has(post._id.toString()),
-      }));
-
-      return postsWithLikeStatus;
-    }
+    return postsWithLikeStatus;
+  }
 
   async getPostById(postId: string, userId: string) {
     const post = await this.postModel

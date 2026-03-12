@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Request, Logger } from '@nestjs/common';
+import { Controller, Post, Get, Body, Query, UseGuards, Request, Logger } from '@nestjs/common';
 import { MiniAppsService } from './mini-apps.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -58,6 +58,19 @@ export class MiniAppsController {
       body.fromToken,
       body.toToken,
       body.fromAmount,
+    );
+  }
+  @Get('swap/history')
+  async getSwapHistory(
+    @Request() req,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    this.logger.log(`Swap history request from user ${req.user.userId}`);
+    return this.miniAppsService.getSwapHistory(
+      req.user.userId,
+      page ? parseInt(page) : 1,
+      limit ? parseInt(limit) : 20,
     );
   }
 

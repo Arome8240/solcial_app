@@ -2,6 +2,7 @@ import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../../schemas/user.schema';
+import { Swap, SwapDocument } from '../../schemas/swap.schema';
 import { SolanaService } from '../solana/solana.service';
 import { JupiterService } from './jupiter.service';
 
@@ -13,6 +14,7 @@ export class MiniAppsService {
 
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Swap.name) private swapModel: Model<SwapDocument>,
     private solanaService: SolanaService,
     private jupiterService: JupiterService,
   ) {}
@@ -203,6 +205,20 @@ export class MiniAppsService {
         `Swap quote: ${fromAmount} ${fromToken} → ${swapData.toAmount} ${toToken} (rate: ${swapData.rate}, impact: ${swapData.priceImpact})`,
       );
 
+      // Save swap history
+      const signature = 'jupiter_swap_' + Date.now();
+      await this.swapModel.create({
+        user: userId,
+        fromToken,
+        toToken,
+        fromAmount,
+        toAmount: swapData.toAmount,
+        rate: swapData.rate,
+        priceImpact: swapData.priceImpact,
+        signature,
+        status: 'completed',
+      });
+
       // In a real implementation, you would:
       // 1. Execute the swap transaction on-chain using Jupiter
       // 2. Return the actual transaction signature
@@ -215,12 +231,46 @@ export class MiniAppsService {
         toAmount: swapData.toAmount,
         rate: swapData.rate,
         priceImpact: swapData.priceImpact,
-        signature: 'jupiter_swap_' + Date.now(),
+        signature,
       };
     } catch (error) {
       this.logger.error(`Swap failed: ${error.message}`);
       throw new BadRequestException(`Swap failed: ${error.message}`);
     }
+  }
+  async getSwapHistory(userId: string, page: number = 1, limit: number = 20) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    const skip = (page - 1) * limit;
+    const swaps = await this.swapModel
+      .find({ user: userId })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const total = await this.swapModel.countDocuments({ user: userId });
+
+    return {
+      swaps: swaps.map((swap) => ({
+        id: swap._id.toString(),
+        fromToken: swap.fromToken,
+        toToken: swap.toToken,
+        fromAmount: swap.fromAmount,
+        toAmount: swap.toAmount,
+        rate: swap.rate,
+        priceImpact: swap.priceImpact,
+        signature: swap.signature,
+        status: swap.status,
+        createdAt: swap.createdAt,
+      })),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   // Get current token prices

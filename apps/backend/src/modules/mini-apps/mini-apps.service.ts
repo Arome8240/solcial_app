@@ -207,11 +207,16 @@ export class MiniAppsService {
       // If not provided, try to calculate using Jupiter
       if (!toAmount || !rate) {
         try {
-          swapData = await this.jupiterService.calculateSwap(
+          const jupiterData = await this.jupiterService.calculateSwap(
             fromToken,
             toToken,
             fromAmount,
           );
+          swapData = {
+            toAmount: jupiterData.toAmount,
+            rate: jupiterData.rate,
+            priceImpact: Number(jupiterData.priceImpact) || 0,
+          };
         } catch (error) {
           this.logger.warn(`Jupiter calculation failed, using provided values: ${error.message}`);
           // If Jupiter fails and no values provided, throw error

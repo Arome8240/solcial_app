@@ -70,36 +70,74 @@ export class FollowsService {
     return { message: 'User unfollowed', isFollowing: false };
   }
 
-  async getFollowers(userId: string, page: number = 1, limit: number = 20) {
+  async getFollowers(userId: string, page: number = 1, limit: number = 20, currentUserId?: string) {
     const skip = (page - 1) * limit;
 
     const follows = await this.followModel
       .find({ following: userId })
       .skip(skip)
       .limit(limit)
-      .populate('follower', 'username name avatar followersCount followingCount')
+      .populate('follower', 'username name avatar bio followersCount followingCount')
       .lean();
 
-    return follows.map((follow) => ({
-      ...follow.follower,
-      id: (follow.follower as any)._id,
-    }));
+    // If currentUserId is provided, check if current user is following each follower
+    const followersWithStatus = await Promise.all(
+      follows.map(async (follow) => {
+        const followerId = (follow.follower as any)._id;
+        let isFollowing = false;
+        
+        if (currentUserId && currentUserId !== followerId.toString()) {
+          const followCheck = await this.followModel.exists({
+            follower: currentUserId,
+            following: followerId,
+          });
+          isFollowing = !!followCheck;
+        }
+        
+        return {
+          ...follow.follower,
+          id: followerId,
+          isFollowing,
+        };
+      })
+    );
+
+    return followersWithStatus;
   }
 
-  async getFollowing(userId: string, page: number = 1, limit: number = 20) {
+  async getFollowing(userId: string, page: number = 1, limit: number = 20, currentUserId?: string) {
     const skip = (page - 1) * limit;
 
     const follows = await this.followModel
       .find({ follower: userId })
       .skip(skip)
       .limit(limit)
-      .populate('following', 'username name avatar followersCount followingCount')
+      .populate('following', 'username name avatar bio followersCount followingCount')
       .lean();
 
-    return follows.map((follow) => ({
-      ...follow.following,
-      id: (follow.following as any)._id,
-    }));
+    // If currentUserId is provided, check if current user is following each user
+    const followingWithStatus = await Promise.all(
+      follows.map(async (follow) => {
+        const followingId = (follow.following as any)._id;
+        let isFollowing = false;
+        
+        if (currentUserId && currentUserId !== followingId.toString()) {
+          const followCheck = await this.followModel.exists({
+            follower: currentUserId,
+            following: followingId,
+          });
+          isFollowing = !!followCheck;
+        }
+        
+        return {
+          ...follow.following,
+          id: followingId,
+          isFollowing,
+        };
+      })
+    );
+
+    return followingWithStatus;
   }
 
   async checkIfFollowing(followerId: string, followingId: string) {

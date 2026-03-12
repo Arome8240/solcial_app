@@ -36,11 +36,13 @@ export class FollowsController {
       req.user.userId,
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 20,
+      req.user.userId,
     );
   }
 
   @Get('followers/:userId')
   async getUserFollowers(
+    @Request() req,
     @Param('userId') userId: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -49,6 +51,7 @@ export class FollowsController {
       userId,
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 20,
+      req.user.userId,
     );
   }
 
@@ -62,11 +65,13 @@ export class FollowsController {
       req.user.userId,
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 20,
+      req.user.userId,
     );
   }
 
   @Get('following/:userId')
   async getUserFollowing(
+    @Request() req,
     @Param('userId') userId: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -75,6 +80,7 @@ export class FollowsController {
       userId,
       page ? parseInt(page) : 1,
       limit ? parseInt(limit) : 20,
+      req.user.userId,
     );
   }
 

@@ -21,6 +21,10 @@ export class WalletController {
   async getBalance(@Request() req) {
     return this.walletService.getBalance(req.user.userId);
   }
+  @Get('seeker-balance')
+  async getSeekerBalance(@Request() req) {
+    return this.walletService.getSeekerBalance(req.user.userId);
+  }
 
   @Get('transactions')
   async getTransactions(

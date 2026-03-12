@@ -44,6 +44,17 @@ export class WalletService {
       throw new BadRequestException('Failed to get balance');
     }
   }
+  async getSeekerBalance(userId: string) {
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    return {
+      balance: user.seekerBalance || 0,
+      symbol: 'SEEKER',
+    };
+  }
 
   async getTransactions(userId: string, page: number = 1, limit: number = 20) {
     const user = await this.userModel.findById(userId);

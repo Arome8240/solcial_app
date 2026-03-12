@@ -61,6 +61,8 @@ export class User {
 
   @Prop({ default: 0 })
   totalAirdropClaimed: number; // Total SOL claimed from airdrops
+  @Prop({ default: 0 })
+  seekerBalance: number; // Seeker token balance
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

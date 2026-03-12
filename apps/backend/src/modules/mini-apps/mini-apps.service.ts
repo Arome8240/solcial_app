@@ -179,6 +179,9 @@ export class MiniAppsService {
     fromToken: string,
     toToken: string,
     fromAmount: number,
+    toAmount?: number,
+    rate?: number,
+    priceImpact?: number,
   ) {
     const user = await this.userModel.findById(userId);
     if (!user) {
@@ -194,20 +197,37 @@ export class MiniAppsService {
     }
 
     try {
-      // Get real-time quote from Jupiter
-      const swapData = await this.jupiterService.calculateSwap(
-        fromToken,
-        toToken,
-        fromAmount,
-      );
+      // If values are provided, use them (calculated on frontend)
+      let swapData = {
+        toAmount: toAmount || 0,
+        rate: rate || 0,
+        priceImpact: priceImpact || 0,
+      };
+
+      // If not provided, try to calculate using Jupiter
+      if (!toAmount || !rate) {
+        try {
+          swapData = await this.jupiterService.calculateSwap(
+            fromToken,
+            toToken,
+            fromAmount,
+          );
+        } catch (error) {
+          this.logger.warn(`Jupiter calculation failed, using provided values: ${error.message}`);
+          // If Jupiter fails and no values provided, throw error
+          if (!toAmount || !rate) {
+            throw new BadRequestException('Unable to calculate swap rate');
+          }
+        }
+      }
 
       this.logger.log(
-        `Swap quote: ${fromAmount} ${fromToken} → ${swapData.toAmount} ${toToken} (rate: ${swapData.rate}, impact: ${swapData.priceImpact})`,
+        `Swap: ${fromAmount} ${fromToken} → ${swapData.toAmount} ${toToken} (rate: ${swapData.rate}, impact: ${swapData.priceImpact})`,
       );
 
       // Save swap history
-      const signature = 'jupiter_swap_' + Date.now();
-      await this.swapModel.create({
+      const signature = 'swap_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+      const swap = await this.swapModel.create({
         user: userId,
         fromToken,
         toToken,
@@ -219,10 +239,13 @@ export class MiniAppsService {
         status: 'completed',
       });
 
+      this.logger.log(`Swap saved with ID: ${swap._id}`);
+
       // In a real implementation, you would:
       // 1. Execute the swap transaction on-chain using Jupiter
-      // 2. Return the actual transaction signature
-      // For demo purposes, we return the quote data
+      // 2. Update user's token balances in the database
+      // 3. Return the actual transaction signature
+      // For demo purposes, we return the swap data
 
       return {
         fromToken,
@@ -232,6 +255,7 @@ export class MiniAppsService {
         rate: swapData.rate,
         priceImpact: swapData.priceImpact,
         signature,
+        status: 'completed',
       };
     } catch (error) {
       this.logger.error(`Swap failed: ${error.message}`);

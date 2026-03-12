@@ -50,7 +50,14 @@ export class MiniAppsController {
   @Post('swap')
   async swapTokens(
     @Request() req,
-    @Body() body: { fromToken: string; toToken: string; fromAmount: number },
+    @Body() body: { 
+      fromToken: string; 
+      toToken: string; 
+      fromAmount: number;
+      toAmount?: number;
+      rate?: number;
+      priceImpact?: number;
+    },
   ) {
     this.logger.log(`Swap request from user ${req.user.userId}`);
     return this.miniAppsService.swapTokens(
@@ -58,6 +65,9 @@ export class MiniAppsController {
       body.fromToken,
       body.toToken,
       body.fromAmount,
+      body.toAmount,
+      body.rate,
+      body.priceImpact,
     );
   }
   @Get('swap/history')

@@ -23,7 +23,7 @@ export class Swap {
   @Prop({ required: true })
   rate: number;
 
-  @Prop({ default: 0 })
+  @Prop({ type: Number, default: 0 })
   priceImpact: number;
 
   @Prop()
@@ -31,6 +31,9 @@ export class Swap {
 
   @Prop({ default: 'completed' })
   status: string;
+
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export const SwapSchema = SchemaFactory.createForClass(Swap);

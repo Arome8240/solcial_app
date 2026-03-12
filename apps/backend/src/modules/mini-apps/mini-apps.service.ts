@@ -214,7 +214,7 @@ export class MiniAppsService {
         fromAmount,
         toAmount: swapData.toAmount,
         rate: swapData.rate,
-        priceImpact: swapData.priceImpact,
+        priceImpact: Number(swapData.priceImpact) || 0,
         signature,
         status: 'completed',
       });
@@ -255,14 +255,14 @@ export class MiniAppsService {
     const total = await this.swapModel.countDocuments({ user: userId });
 
     return {
-      swaps: swaps.map((swap) => ({
+      swaps: swaps.map((swap: any) => ({
         id: swap._id.toString(),
         fromToken: swap.fromToken,
         toToken: swap.toToken,
         fromAmount: swap.fromAmount,
         toAmount: swap.toAmount,
         rate: swap.rate,
-        priceImpact: swap.priceImpact,
+        priceImpact: swap.priceImpact || 0,
         signature: swap.signature,
         status: swap.status,
         createdAt: swap.createdAt,

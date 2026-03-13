@@ -77,12 +77,17 @@ export class PostsService {
       .populate('author', 'username name avatar')
       .lean();
 
+    console.log('[getFeed] Checking likes for userId:', userId, 'type:', typeof userId);
+
     const postsWithLikeStatus = await Promise.all(
       posts.map(async (post: any) => {
-        const liked = await this.likeModel.exists({
+        // Check with both string and ObjectId
+        const liked = await this.likeModel.findOne({
           user: userId,
           post: post._id,
-        });
+        }).lean();
+
+        console.log('[getFeed] Post:', post._id, 'Liked:', !!liked, 'Like record:', liked);
 
         return {
           ...post,

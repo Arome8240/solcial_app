@@ -63,6 +63,30 @@ export class User {
   totalAirdropClaimed: number; // Total SOL claimed from airdrops
   @Prop({ default: 0 })
   seekerBalance: number; // Seeker token balance
+
+  // Two-Factor Authentication
+  @Prop({ default: false })
+  twoFactorEnabled: boolean;
+
+  @Prop()
+  twoFactorSecret: string; // Encrypted TOTP secret
+
+  @Prop({ type: [String], default: [] })
+  recoveryCodes: string[]; // Hashed recovery codes
+
+  // Password Reset
+  @Prop()
+  passwordResetToken: string;
+
+  @Prop()
+  passwordResetExpires: Date;
+
+  // Temporary token for 2FA login
+  @Prop()
+  tempLoginToken: string;
+
+  @Prop()
+  tempLoginExpires: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

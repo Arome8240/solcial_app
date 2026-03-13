@@ -80,6 +80,28 @@ export class EmailService {
     }
   }
 
+  async sendPasswordChangedEmail(email: string, username: string) {
+    try {
+      const { data, error } = await this.resend.emails.send({
+        from: this.fromEmail,
+        to: email,
+        subject: 'Password Changed - Solcial',
+        html: this.getPasswordChangedEmailTemplate(username),
+      });
+
+      if (error) {
+        this.logger.error(`Failed to send password changed email to ${email}:`, error);
+        return { success: false, error: error.message };
+      }
+
+      this.logger.log(`✅ Password changed email sent to ${email}: ${data.id}`);
+      return { success: true, messageId: data.id };
+    } catch (error) {
+      this.logger.error(`❌ Failed to send password changed email to ${email}:`, error);
+      return { success: false, error: error.message };
+    }
+  }
+
   private getVerificationEmailTemplate(code: string, username: string): string {
     return `
       <!DOCTYPE html>
@@ -261,6 +283,74 @@ export class EmailService {
                       <p style="color: #6b7280; margin: 24px 0 0 0; font-size: 14px; line-height: 1.5;">
                         This code will expire in <strong>10 minutes</strong>. If you didn't request a password reset, please ignore this email and your password will remain unchanged.
                       </p>
+                    </td>
+                  </tr>
+                  
+                  <!-- Footer -->
+                  <tr>
+                    <td style="background-color: #f9fafb; padding: 24px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e5e7eb;">
+                      <p style="color: #9ca3af; margin: 0; font-size: 12px;">
+                        © 2026 Solcial. All rights reserved.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+      </html>
+    `;
+  }
+
+  private getPasswordChangedEmailTemplate(username: string): string {
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Changed</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 0;">
+            <tr>
+              <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <!-- Header -->
+                  <tr>
+                    <td style="background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%); padding: 40px; text-align: center; border-radius: 8px 8px 0 0;">
+                      <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Solcial</h1>
+                    </td>
+                  </tr>
+                  
+                  <!-- Content -->
+                  <tr>
+                    <td style="padding: 40px;">
+                      <h2 style="color: #1f2937; margin: 0 0 16px 0; font-size: 24px; font-weight: 600;">Hi ${username}! 👋</h2>
+                      <p style="color: #6b7280; margin: 0 0 24px 0; font-size: 16px; line-height: 1.5;">
+                        Your password has been successfully changed. You can now sign in with your new password.
+                      </p>
+                      
+                      <!-- Security Notice -->
+                      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px; padding: 16px; margin-bottom: 24px;">
+                        <tr>
+                          <td>
+                            <p style="color: #92400e; margin: 0; font-size: 14px; line-height: 1.5;">
+                              <strong>Security Notice:</strong> If you didn't make this change, please contact our support team immediately.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <p style="color: #6b7280; margin: 0; font-size: 14px; line-height: 1.5;">
+                        For your security, we recommend:
+                      </p>
+                      <ul style="color: #6b7280; margin: 8px 0 0 0; padding-left: 20px; font-size: 14px; line-height: 1.8;">
+                        <li>Using a strong, unique password</li>
+                        <li>Enabling two-factor authentication</li>
+                        <li>Never sharing your password with anyone</li>
+                      </ul>
                     </td>
                   </tr>
                   

@@ -287,9 +287,6 @@ export class PostsService {
   async getComments(postId: string, userId: string, page: number = 1, limit: number = 20) {
     const skip = (page - 1) * limit;
 
-    // Get current user details for debugging
-    const currentUser = await this.userModel.findById(userId).select('username _id').lean();
-
     const comments = await this.commentModel
       .find({ post: postId, parentComment: null })
       .sort({ createdAt: -1 })
@@ -298,34 +295,19 @@ export class PostsService {
       .populate('author', 'username name avatar')
       .lean();
 
-    // Check if user liked each comment (Mongoose auto-converts string to ObjectId)
+    // Check if user liked each comment
     const commentsWithLikes = await Promise.all(
       comments.map(async (comment) => {
-        const liked = await this.commentLikeModel.exists({
+        // Convert userId string to ObjectId for proper comparison
+        const liked = await this.commentLikeModel.findOne({
           comment: comment._id,
-          user: userId,
-        });
-
-        // Debug: show all likes for this comment
-        const allLikes = await this.commentLikeModel.find({ comment: comment._id }).lean();
+          user: new Types.ObjectId(userId),
+        }).lean();
 
         return {
           ...comment,
           id: comment._id.toString(),
           isLiked: !!liked,
-          // Debug info
-          _debug: {
-            currentUser: {
-              id: currentUser?._id.toString(),
-              username: currentUser?.username,
-            },
-            liked: !!liked,
-            allLikes: allLikes.map(l => ({
-              user: l.user.toString(),
-              matchesCurrentUser: l.user.toString() === userId,
-              matchesCurrentUserObjectId: l.user.toString() === currentUser?._id.toString()
-            }))
-          }
         };
       }),
     );
@@ -714,7 +696,11 @@ export class PostsService {
         if (!like.post) return null;
 
         const post = like.post;
-        const isLiked = await this.likeModel.exists({ post: post._id, user: currentUserId });
+        // Convert userId string to ObjectId for proper comparison
+        const isLiked = await this.likeModel.findOne({ 
+          post: post._id, 
+          user: new Types.ObjectId(currentUserId) 
+        }).lean();
 
         return {
           ...post,

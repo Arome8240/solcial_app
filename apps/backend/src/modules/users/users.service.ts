@@ -31,6 +31,28 @@ export class UsersService {
     return this.sanitizeUser(user);
   }
 
+  async updateLanguage(userId: string, language: string) {
+    const validLanguages = ['en', 'es', 'fr', 'de', 'zh', 'ja', 'ko', 'ar', 'pt', 'ru', 'hi', 'it'];
+    
+    if (!validLanguages.includes(language)) {
+      throw new BadRequestException('Invalid language code');
+    }
+
+    const user = await this.userModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.language = language;
+    await user.save();
+
+    return { 
+      success: true, 
+      language: user.language,
+      message: 'Language preference updated successfully' 
+    };
+  }
+
   async getUserByUsername(username: string) {
     const user = await this.userModel.findOne({ username });
     if (!user) {
@@ -85,6 +107,7 @@ export class UsersService {
       followersCount: user.followersCount,
       followingCount: user.followingCount,
       postsCount: user.postsCount,
+      language: user.language || 'en',
       createdAt: (user as any).createdAt,
     };
   }

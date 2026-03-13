@@ -87,6 +87,10 @@ export class User {
 
   @Prop()
   tempLoginExpires: Date;
+
+  // Language Preference
+  @Prop({ default: 'en' })
+  language: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

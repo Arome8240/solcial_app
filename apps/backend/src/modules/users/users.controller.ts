@@ -22,6 +22,11 @@ export class UsersController {
     return this.usersService.updateProfile(req.user.userId, updateProfileDto);
   }
 
+  @Put('language')
+  async updateLanguage(@Request() req, @Body() body: { language: string }) {
+    return this.usersService.updateLanguage(req.user.userId, body.language);
+  }
+
   @Get('username/:username')
   async getUserByUsername(@Param('username') username: string) {
     return this.usersService.getUserByUsername(username);

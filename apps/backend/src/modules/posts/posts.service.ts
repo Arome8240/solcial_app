@@ -724,17 +724,20 @@ export class PostsService {
         throw new NotFoundException('Comment not found');
       }
 
+      // Convert userId string to ObjectId for proper comparison
       const existingLike = await this.commentLikeModel.findOne({
-        user: userId,
-        comment: commentId,
+        user: new Types.ObjectId(userId),
+        comment: new Types.ObjectId(commentId),
       });
 
       if (existingLike) {
         return { message: 'Comment already liked', isLiked: true };
       }
 
-      // Mongoose auto-converts strings to ObjectIds based on schema
-      await this.commentLikeModel.create({ user: userId, comment: commentId });
+      await this.commentLikeModel.create({ 
+        user: new Types.ObjectId(userId), 
+        comment: new Types.ObjectId(commentId) 
+      });
       await this.commentModel.findByIdAndUpdate(commentId, { $inc: { likesCount: 1 } });
 
       // Send notification to comment author
@@ -757,9 +760,10 @@ export class PostsService {
   }
 
   async unlikeComment(commentId: string, userId: string) {
+    // Convert userId string to ObjectId for proper comparison
     const like = await this.commentLikeModel.findOneAndDelete({
-      user: userId,
-      comment: commentId,
+      user: new Types.ObjectId(userId),
+      comment: new Types.ObjectId(commentId),
     });
 
     if (!like) {
@@ -777,43 +781,25 @@ export class PostsService {
       throw new NotFoundException('Comment not found');
     }
 
-    // Get current user details for debugging
-    const currentUser = await this.userModel.findById(userId).select('username _id').lean();
-
     const replies = await this.commentModel
       .find({ parentComment: commentId })
       .sort({ createdAt: 1 })
       .populate('author', 'username name avatar')
       .lean();
 
-    // Check if user liked each reply (Mongoose auto-converts string to ObjectId)
+    // Check if user liked each reply
     const repliesWithLikes = await Promise.all(
       replies.map(async (reply) => {
-        const liked = await this.commentLikeModel.exists({
+        // Convert userId string to ObjectId for proper comparison
+        const liked = await this.commentLikeModel.findOne({
           comment: reply._id,
-          user: userId,
-        });
-
-        // Debug: show all likes for this reply
-        const allLikes = await this.commentLikeModel.find({ comment: reply._id }).lean();
+          user: new Types.ObjectId(userId),
+        }).lean();
 
         return {
           ...reply,
           id: reply._id.toString(),
           isLiked: !!liked,
-          // Debug info
-          _debug: {
-            currentUser: {
-              id: currentUser?._id.toString(),
-              username: currentUser?.username,
-            },
-            liked: !!liked,
-            allLikes: allLikes.map(l => ({
-              user: l.user.toString(),
-              matchesCurrentUser: l.user.toString() === userId,
-              matchesCurrentUserObjectId: l.user.toString() === currentUser?._id.toString()
-            }))
-          }
         };
       }),
     );

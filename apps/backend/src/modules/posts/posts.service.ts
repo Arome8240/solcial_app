@@ -77,17 +77,13 @@ export class PostsService {
       .populate('author', 'username name avatar')
       .lean();
 
-    console.log('[getFeed] Checking likes for userId:', userId, 'type:', typeof userId);
-
     const postsWithLikeStatus = await Promise.all(
       posts.map(async (post: any) => {
-        // Check with both string and ObjectId
+        // Convert userId string to ObjectId for proper comparison
         const liked = await this.likeModel.findOne({
-          user: userId,
+          user: new Types.ObjectId(userId),
           post: post._id,
         }).lean();
-
-        console.log('[getFeed] Post:', post._id, 'Liked:', !!liked, 'Like record:', liked);
 
         return {
           ...post,
@@ -114,10 +110,11 @@ export class PostsService {
       throw new NotFoundException('Post not found');
     }
 
-    const liked = await this.likeModel.exists({
-      user: userId,
-      post: postId,
-    });
+    // Convert userId string to ObjectId for proper comparison
+    const liked = await this.likeModel.findOne({
+      user: new Types.ObjectId(userId),
+      post: new Types.ObjectId(postId),
+    }).lean();
 
     return {
       ...post,
@@ -151,10 +148,11 @@ export class PostsService {
 
     const postsWithLikeStatus = await Promise.all(
       posts.map(async (post) => {
-        const liked = await this.likeModel.exists({
-          user: userId,
+        // Convert userId string to ObjectId for proper comparison
+        const liked = await this.likeModel.findOne({
+          user: new Types.ObjectId(userId),
           post: post._id,
-        });
+        }).lean();
 
         return {
           ...post,
@@ -200,16 +198,20 @@ export class PostsService {
       throw new NotFoundException('Post not found');
     }
 
+    // Convert userId string to ObjectId for proper comparison
     const existingLike = await this.likeModel.findOne({
-      user: userId,
-      post: postId,
+      user: new Types.ObjectId(userId),
+      post: new Types.ObjectId(postId),
     });
 
     if (existingLike) {
       return { message: 'Post already liked', isLiked: true };
     }
 
-    await this.likeModel.create({ user: userId, post: postId });
+    await this.likeModel.create({ 
+      user: new Types.ObjectId(userId), 
+      post: new Types.ObjectId(postId) 
+    });
     await this.postModel.findByIdAndUpdate(postId, { $inc: { likesCount: 1 } });
 
     // Send notification to post author
@@ -228,9 +230,10 @@ export class PostsService {
   }
 
   async unlikePost(postId: string, userId: string) {
+    // Convert userId string to ObjectId for proper comparison
     const like = await this.likeModel.findOneAndDelete({
-      user: userId,
-      post: postId,
+      user: new Types.ObjectId(userId),
+      post: new Types.ObjectId(postId),
     });
 
     if (!like) {

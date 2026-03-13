@@ -135,6 +135,15 @@ export class PostsService {
 
     const skip = (page - 1) * limit;
 
+    // Debug: Check total posts for this user
+    const totalPosts = await this.postModel.countDocuments({ author: user._id });
+    console.log('[getUserPosts] Total posts for user:', totalPosts);
+
+    // Debug: Get all posts without pagination to see what's there
+    const allPosts = await this.postModel.find({ author: user._id }).lean();
+    console.log('[getUserPosts] All posts (no pagination):', allPosts.length);
+    console.log('[getUserPosts] Sample post:', allPosts[0]);
+
     const posts = await this.postModel
       .find({ author: user._id })
       .sort({ createdAt: -1 })
@@ -143,7 +152,7 @@ export class PostsService {
       .populate('author', 'username name avatar')
       .lean();
 
-    console.log('[getUserPosts] Found posts count:', posts.length);
+    console.log('[getUserPosts] Found posts count after pagination:', posts.length);
     console.log('[getUserPosts] First post:', posts[0] ? { _id: posts[0]._id, content: posts[0].content?.substring(0, 50) } : 'NONE');
 
     const postsWithLikeStatus = await Promise.all(
